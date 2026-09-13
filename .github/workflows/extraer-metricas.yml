@@ -1,0 +1,53 @@
+name: Extraer datos de flujo de Jira
+
+# Disparo manual (workflow_dispatch), no cron desatendido: el script exige
+# revision humana de varios campos (Sprint Goal, exclusiones de poblacion,
+# fecha de entrega academica) que no puede decidir solo -- automatizar la
+# corrida no automatiza esa revision, y fingir que si seria justo lo que este
+# repo existe para evitar. Quien lo dispara confirma que va a revisar el
+# resultado antes de copiarlo a informacion/material/.
+on:
+  workflow_dispatch:
+    inputs:
+      sprint_id:
+        description: "JIRA_SPRINT_ID explicito (vacio = sprint activo del board)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  extraer:
+    name: Extraer CSV reales desde Jira
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Ejecutar extracción
+        env:
+          JIRA_BASE_URL: ${{ vars.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ vars.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_PROJECT_KEY: ${{ vars.JIRA_PROJECT_KEY }}
+          JIRA_BOARD_ID: ${{ vars.JIRA_BOARD_ID }}
+          JIRA_SPRINT_ID: ${{ inputs.sprint_id }}
+        run: python scripts/extraer_datos_flujo.py
+
+      # El resultado queda como artifact del run -- evidencia real y
+      # descargable (regla del proyecto: nunca el scratchpad de una sesión
+      # como prueba de nada). Quien lo dispara revisa los pendientes humanos
+      # (ver log del paso anterior) antes de copiarlo a informacion/material/
+      # en el otro workspace.
+      - name: Subir CSV como artifact del run
+        uses: actions/upload-artifact@v4
+        with:
+          name: datos-flujo-cameia-${{ github.run_id }}
+          path: datos-flujo-cameia-*/
+          retention-days: 90
