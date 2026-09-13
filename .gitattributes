@@ -1,0 +1,20 @@
+# Normaliza los saltos de línea de todo archivo de texto a LF en el repositorio,
+# sin importar si quien lo edita usa Windows, Mac o Linux — evita diffs falsos
+# por CRLF/LF.
+* text=auto eol=lf
+
+# Excepción: estos sí necesitan CRLF real para poder ejecutarse en Windows.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binarios: nunca se tratan como texto (evita que Git intente normalizarlos o
+# mostrar un diff ilegible).
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
