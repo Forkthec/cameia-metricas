@@ -1,7 +1,16 @@
 /* Identidad visual: marca Forktech (logo real del org de GitHub, sin guía de marca
    escrita -- colores tomados del propio avatar) combinada con la paleta exacta que
    usa el profesor en sus diapositivas de métricas ágiles (informacion/graficas.tex).
-   Todo como variables para que un cambio de color/tema no toque el HTML/JS. */
+   Todo como variables para que un cambio de color/tema no toque el HTML/JS.
+
+   Estructura de navegacion (revision UX, 14-sep-2026):
+   - Nav de pestañas fija (sticky) para que el lector nunca pierda el contexto de
+     seccion al recorrer varias graficas.
+   - Indice de saltos dentro de cada seccion, generado desde los datos (main.js) --
+     agregar una grafica nueva la agrega sola al indice, sin tocar CSS/HTML.
+   - Detalle metodologico (fuente + notas largas) en <details>, colapsado por
+     defecto: la lectura principal de cada tarjeta cabe en un vistazo; el sustento
+     tecnico esta a un clic, no estorbando. */
 :root{
   color-scheme: light;
   /* Marca Forktech */
@@ -11,6 +20,7 @@
 
   /* Paleta del profesor (informacion/graficas.tex) */
   --paper: #FCFAF7;
+  --superficie: #FFFFFF;
   --ink: #242832;
   --muted: #737B8B;
   --panel: #EFF6F2;
@@ -33,11 +43,13 @@
 
   --radio: 10px;
   --sombra: 0 1px 2px rgba(20,30,26,.06), 0 6px 20px -8px rgba(20,30,26,.16);
+  --alto-nav: 58px;
 }
 
 @media (prefers-color-scheme: dark){
   :root{
     --paper: #14181F;
+    --superficie: #1A1F26;
     --ink: #E9ECE7;
     --muted: #9AA3AE;
     --panel: #1B222A;
@@ -49,42 +61,65 @@
 }
 
 *{ box-sizing: border-box; }
-html{ background: var(--paper); }
+html{ background: var(--paper); scroll-behavior: smooth; }
 body{
   margin: 0;
   background: var(--paper);
   color: var(--ink);
   font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
   font-size: 16px;
-  line-height: 1.55;
+  line-height: 1.6;
   padding-inline: max(16px, env(safe-area-inset-left));
 }
 h1,h2,h3{ font-family: "Source Serif 4", Georgia, serif; margin: 0; text-wrap: balance; }
 code, .mono{ font-family: "IBM Plex Mono", ui-monospace, monospace; }
 a{ color: var(--marca-azul); }
+:focus-visible{ outline: 2px solid var(--marca-azul); outline-offset: 2px; border-radius: 4px; }
 .envoltura{ max-width: 1040px; margin-inline: auto; }
+
+.salto-contenido{
+  position:absolute; left:-999px; top:auto; background: var(--marca-navy); color:#fff;
+  padding:10px 16px; border-radius:0 0 8px 0; z-index:100; font-size:13px; font-weight:600;
+}
+.salto-contenido:focus{ left:0; top:0; }
 
 /* --- encabezado con marca Forktech --- */
 .encabezado{
-  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
-  padding-block: 22px 18px; border-bottom: 2px solid var(--marca-navy);
+  display:flex; align-items:flex-start; gap:16px; flex-wrap:wrap;
+  padding-block: 26px 20px; border-bottom: 2px solid var(--marca-navy);
 }
-.encabezado img{ width:36px; height:36px; flex:none; }
-.encabezado .titulos{ display:flex; flex-direction:column; gap:2px; }
-.encabezado h1{ font-size: 20px; font-weight:700; color: var(--marca-navy); }
-.encabezado .subtitulo{ font-family:"IBM Plex Mono"; font-size:12px; color: var(--muted); letter-spacing:.02em; }
+.encabezado img{ width:40px; height:40px; flex:none; margin-top:2px; }
+.encabezado .titulos{ display:flex; flex-direction:column; gap:8px; max-width: 72ch; }
+.encabezado h1{ font-size: clamp(21px,3vw,26px); font-weight:700; color: var(--marca-navy); line-height:1.25; }
+.encabezado .subtitulo{ font-size:14px; color: var(--muted); line-height:1.6; margin:0; }
 @media (prefers-color-scheme: dark){ .encabezado h1{ color: #C9D6FF; } }
 
-.pestañas{ display:flex; gap:4px; margin-top: 18px; border-bottom: 1px solid var(--linea); flex-wrap:wrap; }
+/* --- navegación por pestañas, fija al hacer scroll --- */
+.pestañas{
+  display:flex; gap:4px; margin-top: 0; border-bottom: 1px solid var(--linea); flex-wrap:wrap;
+  position: sticky; top:0; z-index:10; background: var(--paper);
+  padding-top: 10px;
+}
 .pestañas button{
+  display:flex; align-items:center; gap:8px;
   font: inherit; font-family:"IBM Plex Sans"; font-weight:600; font-size:14px;
-  background:none; border:none; padding:10px 16px; cursor:pointer; color: var(--muted);
+  background:none; border:none; padding:10px 14px; cursor:pointer; color: var(--muted);
   border-bottom: 2px solid transparent; margin-bottom:-1px;
 }
+.pestañas button .num{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:18px; height:18px; border-radius:50%; background: var(--panel); color: var(--muted);
+  font-family:"IBM Plex Mono"; font-size:10.5px; flex:none;
+}
 .pestañas button[aria-selected="true"]{ color: var(--marca-navy); border-bottom-color: var(--marca-rojo); }
-@media (prefers-color-scheme: dark){ .pestañas button[aria-selected="true"]{ color:#C9D6FF; } }
+.pestañas button[aria-selected="true"] .num{ background: var(--marca-navy); color:#fff; }
+.pestañas button:disabled{ cursor:not-allowed; opacity:.55; }
+@media (prefers-color-scheme: dark){
+  .pestañas button[aria-selected="true"]{ color:#C9D6FF; }
+  .pestañas button[aria-selected="true"] .num{ background:#C9D6FF; color: var(--marca-navy); }
+}
 
-.panel-seccion{ padding-block: 28px 56px; }
+.panel-seccion{ padding-block: 24px 56px; }
 .panel-seccion[hidden]{ display:none; }
 
 /* --- resumen del corte (stat tiles) --- */
@@ -92,19 +127,35 @@ a{ color: var(--marca-azul); }
   display:grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap:2px;
   background: var(--linea); border:1px solid var(--linea); border-radius: var(--radio); overflow:hidden; margin-block: 16px 8px;
 }
-.stat{ background: var(--paper); padding:14px 14px; display:flex; flex-direction:column; gap:2px; }
+.stat{ background: var(--superficie); padding:14px 14px; display:flex; flex-direction:column; gap:2px; }
 .stat .n{ font-family:"Source Serif 4"; font-size:26px; font-weight:600; }
 .stat .l{ font-size:11.5px; color: var(--muted); }
-.nota-corte{ font-size:12.5px; color: var(--muted); margin-block: 4px 0; }
+.nota-corte{ font-size:13px; color: var(--muted); margin-block: 4px 0; }
+
+/* --- leyenda de convenciones (una sola vez, no repetida por tarjeta) --- */
+.leyenda{
+  display:flex; flex-wrap:wrap; gap:10px 22px; margin-block: 18px;
+  padding: 10px 14px; background: var(--panel); border-radius: var(--radio); font-size:13px;
+}
+.leyenda-item{ display:flex; align-items:center; gap:8px; }
+
+/* --- índice de saltos dentro de la sección --- */
+.indice{ display:flex; flex-wrap:wrap; gap:8px; margin-block: 4px 22px; }
+.indice a{
+  font-size:12.5px; font-weight:600; text-decoration:none; color: var(--marca-navy);
+  background: var(--superficie); border:1px solid var(--linea); border-radius:999px; padding:6px 12px;
+}
+.indice a:hover, .indice a:focus-visible{ border-color: var(--marca-azul); }
+@media (prefers-color-scheme: dark){ .indice a{ color:#C9D6FF; } }
 
 /* --- tarjeta de gráfica --- */
 .tarjeta-grafica{
-  background: var(--paper); border:1px solid var(--linea); border-radius: var(--radio);
-  box-shadow: var(--sombra); padding: 18px 20px 20px; margin-block: 22px;
+  background: var(--superficie); border:1px solid var(--linea); border-radius: var(--radio);
+  box-shadow: var(--sombra); padding: 20px 22px 22px; margin-block: 22px; scroll-margin-top: calc(var(--alto-nav) + 12px);
 }
 .tarjeta-grafica header{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; }
-.tarjeta-grafica h3{ font-size:17px; font-weight:600; }
-.tarjeta-grafica .pregunta{ font-size:13px; color: var(--muted); margin-top:2px; max-width:60ch; }
+.tarjeta-grafica h3{ font-size:18px; font-weight:600; }
+.tarjeta-grafica .pregunta{ font-size:13.5px; color: var(--muted); margin-top:4px; max-width:60ch; font-style:italic; }
 .pill{
   font-family:"IBM Plex Mono"; font-size:10.5px; letter-spacing:.04em; text-transform:uppercase;
   padding:3px 8px; border-radius:999px; display:inline-flex; align-items:center; gap:6px; flex:none;
@@ -112,10 +163,25 @@ a{ color: var(--marca-azul); }
 .pill::before{ content:""; width:6px; height:6px; border-radius:50%; background:currentColor; }
 .pill.ok{ background: var(--ok-fondo); color: var(--ok); }
 .pill.pendiente{ background: var(--pendiente-fondo); color: var(--pendiente); }
-.lienzo-grafica{ position:relative; height: 280px; margin-top:14px; }
-.nota-estado{ font-size:12.5px; color: var(--pendiente); background: var(--pendiente-fondo); border-radius:8px; padding:8px 10px; margin-top:12px; }
-.lectura{ font-size:13px; color: var(--muted); margin-top:12px; padding-top:12px; border-top:1px solid var(--linea); }
-.fuente-dato{ font-family:"IBM Plex Mono"; font-size:11px; color: var(--muted); margin-top:10px; }
+.lienzo-grafica{ position:relative; height: 280px; margin-top:16px; }
+.nota-estado{ font-size:13px; color: var(--pendiente); background: var(--pendiente-fondo); border-radius:8px; padding:10px 12px; margin-top:14px; }
+.lectura{ font-size:13.5px; color: var(--ink); margin-top:14px; padding-top:14px; border-top:1px solid var(--linea); }
 .vacio-grafica{ display:flex; align-items:center; justify-content:center; height:100%; color: var(--muted); font-size:13px; text-align:center; padding:20px; }
 
-.pie{ margin-top: 40px; padding-top:18px; border-top:1px solid var(--linea); font-size:12px; color: var(--muted); display:flex; flex-wrap:wrap; gap:6px 18px; }
+/* --- detalle metodológico plegable --- */
+details.detalle-metodologico{ margin-top:12px; font-size:12.5px; color: var(--muted); }
+details.detalle-metodologico summary{
+  cursor:pointer; font-weight:600; color: var(--marca-navy); list-style:none; display:inline-flex; align-items:center; gap:6px;
+}
+details.detalle-metodologico summary::-webkit-details-marker{ display:none; }
+details.detalle-metodologico summary::before{ content:"▸"; font-size:10px; transition: transform .15s; }
+details.detalle-metodologico[open] summary::before{ transform: rotate(90deg); }
+details.detalle-metodologico .fuente-dato{ font-family:"IBM Plex Mono"; font-size:11.5px; margin-top:8px; }
+@media (prefers-color-scheme: dark){ details.detalle-metodologico summary{ color:#C9D6FF; } }
+
+.volver-arriba{ text-align:center; font-size:13px; margin-top:8px; }
+
+.pie{
+  margin-top: 40px; padding-top:18px; border-top:1px solid var(--linea); font-size:12px;
+  color: var(--muted); display:flex; flex-wrap:wrap; gap:6px 18px; padding-bottom: 32px;
+}

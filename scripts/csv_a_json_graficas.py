@@ -102,25 +102,26 @@ def construir_progreso(carpeta: Path) -> dict:
         return {
             "id": "progreso-diario",
             "tipo": "linea_con_referencia",
-            "titulo": "Progreso del sprint",
+            "titulo": "Sprint 1 — Trabajo pendiente",
             "estado": "pendiente",
-            "nota_estado": "Sin datos de Burndown en este corte.",
+            "nota_estado": "No se dispone de datos de Burndown para este corte.",
         }
     return {
         "id": "progreso-diario",
         "tipo": "linea_con_referencia",
-        "titulo": "Sprint 1: puntos restantes por día",
-        "pregunta": "¿Cuántos Story Points quedan por completar cada día?",
+        "titulo": "Sprint 1 — Trabajo pendiente",
+        "pregunta": "¿Cuántos puntos de historia quedan por completar cada día?",
         "estado": "real",
         "nota_estado": (
-            "Sustituye a Velocity/al ejemplo de barras planeado-vs-completado del "
-            "profesor: Jira no tiene un plan diario declarado por historia, así que "
-            "esa serie no existe como dato real. Velocity Chart propio llega con el "
-            "cierre de Sprint 1."
+            "Esta serie sustituye al Velocity Chart y al ejemplo de barras "
+            "planeado-versus-completado presentado por el docente, dado que Jira no "
+            "registra un plan diario declarado por historia y, en consecuencia, dicha "
+            "serie no constituye un dato verificable. El Velocity Chart propio del "
+            "equipo estará disponible tras el cierre del Sprint 1."
         ),
-        "fuente": "Burndown_diario.csv (Jira, story points reales)",
+        "fuente": "Burndown_diario.csv — Jira, puntos de historia reales",
         "eje_x": {"titulo": "Fecha de corte", "categorias": [_fecha_corta(f["fecha_corte"]) for f in filas]},
-        "eje_y": {"titulo": "Puntos restantes (SP)"},
+        "eje_y": {"titulo": "Puntos restantes"},
         "series": [
             {
                 "nombre": "Puntos restantes",
@@ -130,7 +131,7 @@ def construir_progreso(carpeta: Path) -> dict:
         ],
         "referencias": [
             {
-                "nombre": "Comprometido al inicio",
+                "nombre": "Comprometido al inicio del corte",
                 "valor": int(filas[0]["puntos_comprometidos_totales"]),
                 "color": "var(--serie-muted)",
                 "estilo": "dashed",
@@ -138,9 +139,9 @@ def construir_progreso(carpeta: Path) -> dict:
         ],
         "lectura": {
             "resumen": (
-                f"{filas[0]['puntos_comprometidos_totales']} SP comprometidos, "
-                f"{filas[-1]['puntos_restantes']} SP restantes al corte de hoy. "
-                f"{filas[-1]['issues_sin_estimar_aun_abiertos']} issues abiertos siguen sin estimar."
+                f"Del total comprometido ({filas[0]['puntos_comprometidos_totales']} puntos de "
+                f"historia), restan {filas[-1]['puntos_restantes']} en el corte actual. "
+                f"{filas[-1]['issues_sin_estimar_aun_abiertos']} issues abiertos permanecen sin estimar."
             ),
         },
     }
@@ -154,9 +155,9 @@ def construir_cfd(carpeta: Path) -> dict:
         "id": "cfd",
         "tipo": "flujo_acumulado",
         "titulo": "Diagrama de Flujo Acumulado",
-        "pregunta": "¿Dónde se está acumulando el trabajo, día a día?",
+        "pregunta": "¿Dónde se acumula el trabajo, día a día?",
         "estado": "real",
-        "fuente": "CFD_diario.csv (conteo real por estado, corte diario 23:59:59 COL)",
+        "fuente": "CFD_diario.csv — conteo real por estado, población de Sprint 1, corte diario 23:59:59 (hora Colombia)",
         "eje_x": {"titulo": "Fecha de corte", "categorias": [_fecha_corta(f["fecha_corte"]) for f in filas]},
         "eje_y": {"titulo": "Ítems acumulados"},
         "series": [
@@ -169,9 +170,9 @@ def construir_cfd(carpeta: Path) -> dict:
         ],
         "lectura": {
             "resumen": (
-                "Una banda que se ensancha de forma sostenida señala acumulación: "
-                "conviene investigar un posible cuello de botella. El crecimiento de "
-                "«Finalizado» indica trabajo realmente terminado."
+                "El ensanchamiento sostenido de una banda indica acumulación de trabajo y "
+                "sugiere un posible cuello de botella. El crecimiento de la banda «Finalizado» "
+                "refleja trabajo efectivamente concluido."
             ),
         },
     }
@@ -180,7 +181,7 @@ def construir_cfd(carpeta: Path) -> dict:
 def construir_aging_wip(carpeta: Path) -> dict:
     filas = _leer_csv(carpeta / "WIP_corte.csv")
     if not filas:
-        return {"id": "aging-wip", "tipo": "edad_por_estado", "titulo": "Kanban Aging WIP", "estado": "pendiente"}
+        return {"id": "aging-wip", "tipo": "edad_por_estado", "titulo": "Kanban — Edad del trabajo en curso", "estado": "pendiente"}
     hoy = datetime.strptime(filas[0]["fecha_corte"], "%Y-%m-%d").date()
     estados = sorted({f["estado_actual"] for f in filas}, key=lambda e: STATE_ORDER.index(e) if e in STATE_ORDER else 99)
     puntos = []
@@ -191,26 +192,33 @@ def construir_aging_wip(carpeta: Path) -> dict:
         edades.append(edad)
         puntos.append({"estado": f["estado_actual"], "edad_dias": edad, "id": f["id_elemento"]})
     promedio = round(sum(edades) / len(edades), 1) if edades else 0
+    promedio_txt = f"{promedio:.1f}".replace(".", ",")
     return {
         "id": "aging-wip",
         "tipo": "edad_por_estado",
-        "titulo": "Kanban Aging WIP",
-        "pregunta": "¿Dónde necesitamos ayudar hoy?",
+        "titulo": "Kanban — Edad del trabajo en curso",
+        "pregunta": "¿Dónde requiere apoyo el equipo en este momento?",
         "estado": "real",
         "nota_estado": (
-            "Sin línea de referencia SLE: con solo "
-            f"{len(edades)} ítems abiertos no hay muestra suficiente para declarar un "
-            "umbral del equipo (P85) sin inventarlo -- se calcula cuando exista acuerdo."
+            "No se incluye una línea de referencia SLE: con "
+            f"{len(edades)} ítems abiertos, la muestra es insuficiente para declarar un "
+            "umbral del equipo (percentil 85) sin incurrir en una estimación no "
+            "verificable. Este valor se calculará cuando exista un acuerdo del equipo y "
+            "una muestra suficiente."
         ),
-        "fuente": "WIP_corte.csv (edad desde la primera entrada real a 'En curso')",
+        "fuente": "WIP_corte.csv — edad calculada desde la primera entrada real a «En curso»",
         "eje_x": {"titulo": "Estado actual", "categorias": estados},
         "eje_y": {"titulo": "Edad del ítem (días calendario)"},
         "puntos": puntos,
         "referencias": [
-            {"nombre": f"Edad promedio actual: {promedio} días", "valor": promedio, "color": "var(--ink)", "estilo": "dotted"}
+            {"nombre": f"Edad promedio observada: {promedio_txt} días", "valor": promedio, "color": "var(--ink)", "estilo": "dotted"}
         ],
         "lectura": {
-            "resumen": f"{len(edades)} ítems abiertos hoy. Edad promedio real: {promedio} días. No es meta ni tiempo restante.",
+            "resumen": (
+                f"Ítems abiertos en el corte actual: {len(edades)}. Edad promedio observada: "
+                f"{promedio_txt} días. Este valor no constituye una meta ni una estimación de "
+                "tiempo restante."
+            ),
         },
     }
 
@@ -219,16 +227,18 @@ def construir_waste_snake(carpeta: Path) -> dict:
     return {
         "id": "waste-snake",
         "tipo": "categorias_apiladas_con_total",
-        "titulo": "Kanban Waste Snake",
-        "pregunta": "¿Dónde perdemos horas-persona cada día?",
+        "titulo": "Kanban — Registro de desperdicio (Waste Snake)",
+        "pregunta": "¿En qué categoría se pierden horas-persona cada día?",
         "estado": "pendiente",
         "nota_estado": (
-            "Sin impediment backlog en Jira todavía (0 labels, 0 componentes de "
-            "'desperdicio' verificados). Se pidió a Juan José, plazo 15-sep-2026 -- "
-            "ver comunicaciones/11092026_scrum-texto_propuesta-metricas-agiles-reales.md. "
-            "Vacío a propósito: nunca se rellena con la cifra ilustrativa del ejemplo del profesor."
+            "Aún no existe un registro de impedimentos («impediment backlog») en Jira: "
+            "se verificaron 0 etiquetas y 0 componentes de «desperdicio». Esta gestión fue "
+            "solicitada a Juan José Arias Chacua, con plazo al 15 de septiembre de 2026 "
+            "(véase comunicaciones/11092026_scrum-texto_propuesta-metricas-agiles-reales.md). "
+            "La gráfica permanece vacía de manera deliberada: no se sustituye por la cifra "
+            "ilustrativa del ejemplo presentado por el docente."
         ),
-        "fuente": "Sin fuente real en Jira aún",
+        "fuente": "Sin fuente real disponible en Jira",
     }
 
 
