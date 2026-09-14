@@ -1,0 +1,330 @@
+{
+  "generado_en": "2026-09-13T23:55:27-05:00",
+  "corte": {
+    "identificador_del_corte": "CAMEIA-CM-Sprint 1-2026-09-13",
+    "fecha_extraccion": "2026-09-13T20:00:00-05:00 (aprox., sesión Claude Code)",
+    "poblacion_total": 33,
+    "por_estado": {
+      "Por hacer": 9,
+      "En curso": 10,
+      "En revisión": 4,
+      "En pruebas": 0,
+      "Finalizado": 10
+    },
+    "story_points_comprometidos": 101,
+    "ciclos_terminados_n": 10,
+    "fuente": "Jira \"CM\""
+  },
+  "graficas": [
+    {
+      "id": "progreso-diario",
+      "tipo": "linea_con_referencia",
+      "titulo": "Sprint 1: puntos restantes por día",
+      "pregunta": "¿Cuántos Story Points quedan por completar cada día?",
+      "estado": "real",
+      "nota_estado": "Sustituye a Velocity/al ejemplo de barras planeado-vs-completado del profesor: Jira no tiene un plan diario declarado por historia, así que esa serie no existe como dato real. Velocity Chart propio llega con el cierre de Sprint 1.",
+      "fuente": "Burndown_diario.csv (Jira, story points reales)",
+      "eje_x": {
+        "titulo": "Fecha de corte",
+        "categorias": [
+          "31-Aug",
+          "01-Sep",
+          "02-Sep",
+          "03-Sep",
+          "04-Sep",
+          "05-Sep",
+          "06-Sep",
+          "07-Sep",
+          "08-Sep",
+          "09-Sep",
+          "10-Sep",
+          "11-Sep",
+          "12-Sep",
+          "13-Sep"
+        ]
+      },
+      "eje_y": {
+        "titulo": "Puntos restantes (SP)"
+      },
+      "series": [
+        {
+          "nombre": "Puntos restantes",
+          "color": "var(--serie-azul)",
+          "valores": [
+            101,
+            101,
+            101,
+            101,
+            101,
+            99,
+            99,
+            99,
+            99,
+            99,
+            97,
+            94,
+            94,
+            94
+          ]
+        }
+      ],
+      "referencias": [
+        {
+          "nombre": "Comprometido al inicio",
+          "valor": 101,
+          "color": "var(--serie-muted)",
+          "estilo": "dashed"
+        }
+      ],
+      "lectura": {
+        "resumen": "101 SP comprometidos, 94 SP restantes al corte de hoy. 5 issues abiertos siguen sin estimar."
+      }
+    },
+    {
+      "id": "cfd",
+      "tipo": "flujo_acumulado",
+      "titulo": "Diagrama de Flujo Acumulado",
+      "pregunta": "¿Dónde se está acumulando el trabajo, día a día?",
+      "estado": "real",
+      "fuente": "CFD_diario.csv (conteo real por estado, corte diario 23:59:59 COL)",
+      "eje_x": {
+        "titulo": "Fecha de corte",
+        "categorias": [
+          "31-Aug",
+          "01-Sep",
+          "02-Sep",
+          "03-Sep",
+          "04-Sep",
+          "05-Sep",
+          "06-Sep",
+          "07-Sep",
+          "08-Sep",
+          "09-Sep",
+          "10-Sep",
+          "11-Sep",
+          "12-Sep",
+          "13-Sep"
+        ]
+      },
+      "eje_y": {
+        "titulo": "Ítems acumulados"
+      },
+      "series": [
+        {
+          "nombre": "Por hacer",
+          "color": "var(--serie-muted)",
+          "valores": [
+            33,
+            33,
+            32,
+            30,
+            29,
+            28,
+            28,
+            27,
+            26,
+            26,
+            20,
+            10,
+            9,
+            9
+          ]
+        },
+        {
+          "nombre": "En curso",
+          "color": "var(--serie-naranja)",
+          "valores": [
+            0,
+            0,
+            1,
+            2,
+            3,
+            4,
+            3,
+            3,
+            4,
+            4,
+            8,
+            9,
+            10,
+            10
+          ]
+        },
+        {
+          "nombre": "En revisión",
+          "color": "var(--serie-azul)",
+          "valores": [
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            2,
+            2,
+            2,
+            3,
+            4,
+            4,
+            4
+          ]
+        },
+        {
+          "nombre": "En pruebas",
+          "color": "var(--serie-morado)",
+          "valores": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "nombre": "Finalizado",
+          "color": "var(--serie-verde)",
+          "valores": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            10,
+            10,
+            10
+          ]
+        }
+      ],
+      "lectura": {
+        "resumen": "Una banda que se ensancha de forma sostenida señala acumulación: conviene investigar un posible cuello de botella. El crecimiento de «Finalizado» indica trabajo realmente terminado."
+      }
+    },
+    {
+      "id": "aging-wip",
+      "tipo": "edad_por_estado",
+      "titulo": "Kanban Aging WIP",
+      "pregunta": "¿Dónde necesitamos ayudar hoy?",
+      "estado": "real",
+      "nota_estado": "Sin línea de referencia SLE: con solo 14 ítems abiertos no hay muestra suficiente para declarar un umbral del equipo (P85) sin inventarlo -- se calcula cuando exista acuerdo.",
+      "fuente": "WIP_corte.csv (edad desde la primera entrada real a 'En curso')",
+      "eje_x": {
+        "titulo": "Estado actual",
+        "categorias": [
+          "En curso",
+          "En revisión"
+        ]
+      },
+      "eje_y": {
+        "titulo": "Edad del ítem (días calendario)"
+      },
+      "puntos": [
+        {
+          "estado": "En revisión",
+          "edad_dias": 9,
+          "id": "CM-101"
+        },
+        {
+          "estado": "En revisión",
+          "edad_dias": 10,
+          "id": "CM-102"
+        },
+        {
+          "estado": "En revisión",
+          "edad_dias": 9,
+          "id": "CM-103"
+        },
+        {
+          "estado": "En curso",
+          "edad_dias": 6,
+          "id": "CM-104"
+        },
+        {
+          "estado": "En revisión",
+          "edad_dias": 2,
+          "id": "CM-133"
+        },
+        {
+          "estado": "En curso",
+          "edad_dias": 3,
+          "id": "CM-14"
+        },
+        {
+          "estado": "En curso",
+          "edad_dias": 2,
+          "id": "CM-140"
+        },
+        {
+          "estado": "En curso",
+          "edad_dias": 2,
+          "id": "CM-143"
+        },
+        {
+          "estado": "En curso",
+          "edad_dias": 1,
+          "id": "CM-146"
+        },
+        {
+          "estado": "En curso",
+          "edad_dias": 3,
+          "id": "CM-16"
+        },
+        {
+          "estado": "En curso",
+          "edad_dias": 3,
+          "id": "CM-17"
+        },
+        {
+          "estado": "En curso",
+          "edad_dias": 3,
+          "id": "CM-18"
+        },
+        {
+          "estado": "En curso",
+          "edad_dias": 3,
+          "id": "CM-19"
+        },
+        {
+          "estado": "En curso",
+          "edad_dias": 3,
+          "id": "CM-20"
+        }
+      ],
+      "referencias": [
+        {
+          "nombre": "Edad promedio actual: 4.2 días",
+          "valor": 4.2,
+          "color": "var(--ink)",
+          "estilo": "dotted"
+        }
+      ],
+      "lectura": {
+        "resumen": "14 ítems abiertos hoy. Edad promedio real: 4.2 días. No es meta ni tiempo restante."
+      }
+    },
+    {
+      "id": "waste-snake",
+      "tipo": "categorias_apiladas_con_total",
+      "titulo": "Kanban Waste Snake",
+      "pregunta": "¿Dónde perdemos horas-persona cada día?",
+      "estado": "pendiente",
+      "nota_estado": "Sin impediment backlog en Jira todavía (0 labels, 0 componentes de 'desperdicio' verificados). Se pidió a Juan José, plazo 15-sep-2026 -- ver comunicaciones/11092026_scrum-texto_propuesta-metricas-agiles-reales.md. Vacío a propósito: nunca se rellena con la cifra ilustrativa del ejemplo del profesor.",
+      "fuente": "Sin fuente real en Jira aún"
+    }
+  ]
+}

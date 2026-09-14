@@ -1,0 +1,121 @@
+/* Identidad visual: marca Forktech (logo real del org de GitHub, sin guía de marca
+   escrita -- colores tomados del propio avatar) combinada con la paleta exacta que
+   usa el profesor en sus diapositivas de métricas ágiles (informacion/graficas.tex).
+   Todo como variables para que un cambio de color/tema no toque el HTML/JS. */
+:root{
+  color-scheme: light;
+  /* Marca Forktech */
+  --marca-navy: #0E1E42;
+  --marca-rojo: #EA2630;
+  --marca-azul: #2E6EEE;
+
+  /* Paleta del profesor (informacion/graficas.tex) */
+  --paper: #FCFAF7;
+  --ink: #242832;
+  --muted: #737B8B;
+  --panel: #EFF6F2;
+  --panelhead: #D9EBE4;
+  --linea: #E4E1D8;
+
+  /* Colores de serie para gráficas -- mismos nombres que usa csv_a_json_graficas.py,
+     así que agregar un estado/categoría nuevo solo necesita un nombre nuevo aquí. */
+  --serie-azul: #406BFF;
+  --serie-naranja: #F17C35;
+  --serie-verde: #288867;
+  --serie-rojo: #DD4056;
+  --serie-muted: #A9AFBD;
+  --serie-morado: #8859C9;
+
+  --ok: #1D7A63;
+  --ok-fondo: #DCEEE6;
+  --pendiente: #A6631F;
+  --pendiente-fondo: #F3E4D2;
+
+  --radio: 10px;
+  --sombra: 0 1px 2px rgba(20,30,26,.06), 0 6px 20px -8px rgba(20,30,26,.16);
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper: #14181F;
+    --ink: #E9ECE7;
+    --muted: #9AA3AE;
+    --panel: #1B222A;
+    --panelhead: #232C36;
+    --linea: #2B333D;
+    --ok-fondo: #163A2E;
+    --pendiente-fondo: #3B2C18;
+  }
+}
+
+*{ box-sizing: border-box; }
+html{ background: var(--paper); }
+body{
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  padding-inline: max(16px, env(safe-area-inset-left));
+}
+h1,h2,h3{ font-family: "Source Serif 4", Georgia, serif; margin: 0; text-wrap: balance; }
+code, .mono{ font-family: "IBM Plex Mono", ui-monospace, monospace; }
+a{ color: var(--marca-azul); }
+.envoltura{ max-width: 1040px; margin-inline: auto; }
+
+/* --- encabezado con marca Forktech --- */
+.encabezado{
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding-block: 22px 18px; border-bottom: 2px solid var(--marca-navy);
+}
+.encabezado img{ width:36px; height:36px; flex:none; }
+.encabezado .titulos{ display:flex; flex-direction:column; gap:2px; }
+.encabezado h1{ font-size: 20px; font-weight:700; color: var(--marca-navy); }
+.encabezado .subtitulo{ font-family:"IBM Plex Mono"; font-size:12px; color: var(--muted); letter-spacing:.02em; }
+@media (prefers-color-scheme: dark){ .encabezado h1{ color: #C9D6FF; } }
+
+.pestañas{ display:flex; gap:4px; margin-top: 18px; border-bottom: 1px solid var(--linea); flex-wrap:wrap; }
+.pestañas button{
+  font: inherit; font-family:"IBM Plex Sans"; font-weight:600; font-size:14px;
+  background:none; border:none; padding:10px 16px; cursor:pointer; color: var(--muted);
+  border-bottom: 2px solid transparent; margin-bottom:-1px;
+}
+.pestañas button[aria-selected="true"]{ color: var(--marca-navy); border-bottom-color: var(--marca-rojo); }
+@media (prefers-color-scheme: dark){ .pestañas button[aria-selected="true"]{ color:#C9D6FF; } }
+
+.panel-seccion{ padding-block: 28px 56px; }
+.panel-seccion[hidden]{ display:none; }
+
+/* --- resumen del corte (stat tiles) --- */
+.resumen-corte{
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap:2px;
+  background: var(--linea); border:1px solid var(--linea); border-radius: var(--radio); overflow:hidden; margin-block: 16px 8px;
+}
+.stat{ background: var(--paper); padding:14px 14px; display:flex; flex-direction:column; gap:2px; }
+.stat .n{ font-family:"Source Serif 4"; font-size:26px; font-weight:600; }
+.stat .l{ font-size:11.5px; color: var(--muted); }
+.nota-corte{ font-size:12.5px; color: var(--muted); margin-block: 4px 0; }
+
+/* --- tarjeta de gráfica --- */
+.tarjeta-grafica{
+  background: var(--paper); border:1px solid var(--linea); border-radius: var(--radio);
+  box-shadow: var(--sombra); padding: 18px 20px 20px; margin-block: 22px;
+}
+.tarjeta-grafica header{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; }
+.tarjeta-grafica h3{ font-size:17px; font-weight:600; }
+.tarjeta-grafica .pregunta{ font-size:13px; color: var(--muted); margin-top:2px; max-width:60ch; }
+.pill{
+  font-family:"IBM Plex Mono"; font-size:10.5px; letter-spacing:.04em; text-transform:uppercase;
+  padding:3px 8px; border-radius:999px; display:inline-flex; align-items:center; gap:6px; flex:none;
+}
+.pill::before{ content:""; width:6px; height:6px; border-radius:50%; background:currentColor; }
+.pill.ok{ background: var(--ok-fondo); color: var(--ok); }
+.pill.pendiente{ background: var(--pendiente-fondo); color: var(--pendiente); }
+.lienzo-grafica{ position:relative; height: 280px; margin-top:14px; }
+.nota-estado{ font-size:12.5px; color: var(--pendiente); background: var(--pendiente-fondo); border-radius:8px; padding:8px 10px; margin-top:12px; }
+.lectura{ font-size:13px; color: var(--muted); margin-top:12px; padding-top:12px; border-top:1px solid var(--linea); }
+.fuente-dato{ font-family:"IBM Plex Mono"; font-size:11px; color: var(--muted); margin-top:10px; }
+.vacio-grafica{ display:flex; align-items:center; justify-content:center; height:100%; color: var(--muted); font-size:13px; text-align:center; padding:20px; }
+
+.pie{ margin-top: 40px; padding-top:18px; border-top:1px solid var(--linea); font-size:12px; color: var(--muted); display:flex; flex-wrap:wrap; gap:6px 18px; }

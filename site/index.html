@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel de métricas CAMEIA</title>
+<meta name="description" content="Gráficas ágiles, atributos de calidad y GQM de CAMEIA, extraídos de Jira/GitHub — Forktech.">
+<link rel="icon" href="assets/forktech-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+<div class="envoltura">
+  <header class="encabezado">
+    <img src="assets/forktech-logo.png" alt="Forktech" width="36" height="36">
+    <div class="titulos">
+      <h1>Panel de métricas CAMEIA</h1>
+      <span class="subtitulo">Forktech · Jira + GitHub, nunca capturas de pantalla</span>
+    </div>
+  </header>
+
+  <nav class="pestañas" role="tablist" aria-label="Secciones del panel">
+    <button role="tab" aria-selected="true" aria-controls="seccion-graficas">Gráficas ágiles</button>
+    <button role="tab" aria-selected="false" aria-controls="seccion-calidad" disabled title="Próximamente (Bloque 3)">Atributos de calidad</button>
+    <button role="tab" aria-selected="false" aria-controls="seccion-gqm" disabled title="Próximamente (Bloque 4)">GQM</button>
+  </nav>
+
+  <main>
+    <section id="seccion-graficas" class="panel-seccion">
+      <div class="resumen-corte" id="resumen-corte"></div>
+      <p class="nota-corte" id="nota-corte"></p>
+      <div id="lista-graficas"></div>
+    </section>
+
+    <section id="seccion-calidad" class="panel-seccion" hidden>
+      <p class="nota-corte">Atributos de calidad (P2) — llega en el Bloque 3: señales reales de CI/CD, CodeQL y despliegue.</p>
+    </section>
+
+    <section id="seccion-gqm" class="panel-seccion" hidden>
+      <p class="nota-corte">GQM (TMA) — llega en el Bloque 4: candidatas con datos reales de Jira/GitHub, pendientes de acuerdo de equipo.</p>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <span id="generado-en"></span>
+    <span>Fuente del mecanismo: <a href="https://github.com/Forkthec/cameia-metricas" target="_blank" rel="noopener">cameia-metricas</a></span>
+    <span>Nunca inventa un dato: lo que no se puede obtener queda "pendiente".</span>
+  </footer>
+</div>
+
+<script src="js/vendor/chart.umd.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
