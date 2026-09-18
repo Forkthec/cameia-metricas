@@ -30,8 +30,7 @@ jobs:
           }
           PYEOF
 
-      - name: Ejecutar validador (fase informativa — CM-121, no bloquea todavia)
-        continue-on-error: true
+      - name: Ejecutar validador (CM-175 — bloqueante desde el 18-sep-2026)
         run: |
           set +e
           python3 .github/scripts/pr_policy.py /tmp/pr.json | tee /tmp/report.json
@@ -43,6 +42,6 @@ jobs:
           # aqui usamos Draft para "listo mientras Paula revisa", no para "aun incompleto", hay que
           # mirar tambien 'errors' y no confiar solo en 'result'.
           if [ "$ERRORS" != "0" ]; then
-            echo "::warning::Plantilla de PR con $ERRORS hallazgo(s) (fase informativa, CM-121/CM-123: no bloquea todavia). Ver el detalle en 'errors' arriba. Pasara a bloqueante con 5 PR consecutivos en verde o el 18-sep-2026."
+            echo "::error::Plantilla de PR con $ERRORS hallazgo(s). Corrige los campos senalados en 'errors' antes de continuar."
             exit 1
           fi

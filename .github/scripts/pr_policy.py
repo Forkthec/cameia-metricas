@@ -86,10 +86,10 @@ def validate(payload):
                 errors.append("modulo requerido: " + field)
     if not re.fullmatch(r"(bajo|medio|alto) — \S.*", fields.get("Riesgo", "")):
         errors.append("riesgo: usar bajo/medio/alto — explicacion y recuperacion")
-    ai_match = re.fullmatch(r"(si|no) — \S.*", fields.get("IA", ""))
+    ai_match = re.fullmatch(r"(sí|si|no) — \S.*", fields.get("IA", ""))
     if not ai_match:
-        errors.append("ia: usar si/no — alcance y registro real")
-    elif (ai_match[1] == "si") != assisted:
+        errors.append("ia: usar sí/no — alcance y registro real")
+    elif (ai_match[1] in ("sí", "si")) != assisted:
         errors.append("ia: titulo y declaracion deben coincidir con [IA-ASISTIDO]")
     human_pattern = r"(pendiente|revisado por el autor) — \S.*" if payload["draft"] else r"revisado por el autor — \S.*"
     if not re.fullmatch(human_pattern, fields.get("Control humano", "")):
