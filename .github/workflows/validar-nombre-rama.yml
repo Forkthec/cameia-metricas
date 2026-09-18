@@ -11,7 +11,6 @@ jobs:
     if: github.actor != 'dependabot[bot]' # CM-138: Dependabot no puede seguir CM-<n>-<desc> ni la plantilla de 8 campos
     steps:
       - name: Verificar patron CM-numero-descripcion-kebab-case
-        continue-on-error: true
         env:
           BRANCH: ${{ github.head_ref }}
         run: |
@@ -19,6 +18,6 @@ jobs:
           if [[ "$BRANCH" =~ ^CM-[0-9]+-[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
             echo "Nombre de rama valido."
           else
-            echo "::warning::La rama '$BRANCH' no sigue el patron CM-<numero>-<descripcion-kebab-case>. Fase informativa (CM-122): no bloquea todavia. Pasara a bloqueante con 5 PR consecutivos en verde o el 18-sep-2026, lo que ocurra primero."
+            echo "::error::La rama '$BRANCH' no sigue el patron CM-<numero>-<descripcion-kebab-case>."
             exit 1
           fi
