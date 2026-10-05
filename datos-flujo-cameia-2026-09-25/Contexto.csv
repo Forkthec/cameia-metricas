@@ -1,8 +1,0 @@
-campo,valor
-identificador_del_corte,CAMEIA-CM-Sprint 1-2026-09-25
-fecha_extraccion,2026-09-25T11:03:59.642452-05:00
-proyecto,"Jira ""CM"""
-tablero,board id 1
-sprint,"Sprint 1 (id 1), inicio 2026-08-31T00:05:03.000Z, fin previsto 2026-09-25T11:00:00.000Z, goal: no definido"
-poblacion,"60 issues en el corte, excluidos del corte completo (EXCLUDE_KEYS): CM-142, CM-151. De esos 60, la poblacion de flujo (CFD/Burndown/WIP/Ciclos_terminados) es 50, tras excluir 10 issues tipo 'Impediment / Bloqueo' (FLOW_EXCLUDE_ISSUE_TYPES, decidido con el equipo el 25-sep-2026). Esos mismos issues se conservan enteros en Impedimentos.csv y Eventos.csv."
-revision_manual_pendiente,"Confirmar poblaciones excluidas (ej. colas fuera de sprint), fecha de entrega académica, calidad_dato de cada tabla, y que EXCLUDE_KEYS y FLOW_EXCLUDE_ISSUE_TYPES sigan vigentes para este corte, antes de entregar a Prism."
