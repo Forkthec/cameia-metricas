@@ -22,3 +22,5 @@ env/
 .vscode/
 .DS_Store
 Thumbs.db
+
+datos-flujo-cameia-*/
